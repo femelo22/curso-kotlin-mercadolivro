@@ -2,6 +2,7 @@ package com.mercadolivro.controllers
 
 import com.fasterxml.jackson.databind.util.BeanUtil
 import com.mercadolivro.controllers.request.PostCustomerRequest
+import com.mercadolivro.controllers.request.PutCustomerRequest
 import com.mercadolivro.models.CustomerModel
 import org.springframework.beans.BeanUtils
 import org.springframework.http.HttpStatus
@@ -24,8 +25,6 @@ class CustomerController {
         return customers.filter { it.id == id }.first()
     }
 
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody customer: PostCustomerRequest){
@@ -39,6 +38,16 @@ class CustomerController {
         customers.add(CustomerModel(id, customer.name, customer.email))
 
         println(customer)
+    }
+
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun update(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest){
+        return customers.filter { it.id == id }.first().let {
+            it.name = customer.name
+            it.email = customer.email
+        }
     }
 
 }
