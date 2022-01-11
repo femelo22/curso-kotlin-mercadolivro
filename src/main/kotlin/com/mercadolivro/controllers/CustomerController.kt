@@ -15,9 +15,16 @@ class CustomerController {
     val customers = mutableListOf<CustomerModel>()
 
     @GetMapping
-    fun listCustomer(): MutableList<CustomerModel> {
+    fun getAll(): MutableList<CustomerModel> {
         return customers
     }
+
+    @GetMapping("/{id}")
+    fun getCustomer(@PathVariable id: Int): CustomerModel{
+        return customers.filter { it.id == id }.first()
+    }
+
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
