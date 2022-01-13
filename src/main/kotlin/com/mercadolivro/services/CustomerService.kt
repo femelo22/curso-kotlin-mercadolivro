@@ -14,13 +14,12 @@ class CustomerService (
     val repo: CustomerRepository
 ){
 
-    val customers = mutableListOf<CustomerModel>()
-
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
-            return customers.filter { it.name.contains(name, true) }
+            return repo.findByName(it)
         }
-        return customers
+
+        return repo.findAll()
     }
 
     fun create(customer: CustomerModel) {
@@ -28,18 +27,24 @@ class CustomerService (
     }
 
     fun getCustomer(id: Int): CustomerModel {
-        return customers.filter { it.id == id }.first()
+        return repo.findById(id).orElseThrow()
     }
 
     fun update(customer: CustomerModel) {
-        customers.filter { it.id == customer.id }.first().let {
-            it.name = customer.name
-            it.email = customer.email
+
+        if(!repo.existsById(customer.id!!)){
+            throw Exception()
         }
+
+        repo.save(customer)
     }
 
     fun delete(id: Int) {
-        customers.removeIf { it.id == id }
+        if(!repo.existsById(id)){
+            throw Exception()
+        }
+
+        repo.deleteById(id)
     }
 
 }
