@@ -26,7 +26,7 @@ class CustomerService (
        repo.save(customer)
     }
 
-    fun getCustomer(id: Int): CustomerModel {
+    fun getCustomerById(id: Int): CustomerModel {
         return repo.findById(id).orElseThrow()
     }
 
