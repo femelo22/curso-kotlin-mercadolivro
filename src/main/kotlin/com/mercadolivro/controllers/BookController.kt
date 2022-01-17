@@ -3,6 +3,7 @@ package com.mercadolivro.controllers
 import com.mercadolivro.controllers.request.PostBookRequest
 import com.mercadolivro.controllers.request.PutBookRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
+import com.mercadolivro.enuns.BookStatus
 import com.mercadolivro.extension.toBookModel
 import com.mercadolivro.extension.toCustomerModel
 import com.mercadolivro.models.BookModel
@@ -32,6 +33,11 @@ class BookController(
         return bookService.findAll()
     }
 
+    @GetMapping("/active")
+    fun findAllActives(): List<BookModel> {
+        return bookService.findAllByStatus()
+    }
+
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Int): BookModel {
         return bookService.findById(id)
@@ -40,7 +46,9 @@ class BookController(
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable id: Int, @RequestBody book: PutBookRequest) {
-        //bookService.update(book.toBookModel(id))
+        val bookSaved = bookService.findById(id)
+        bookService.update(book.toBookModel(bookSaved))
+
     }
 
     @DeleteMapping("/{id}")

@@ -1,9 +1,11 @@
 package com.mercadolivro.services
 
+import com.mercadolivro.enuns.BookStatus
 import com.mercadolivro.models.BookModel
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.BookRepository
 import org.springframework.stereotype.Service
+import java.awt.print.Book
 
 @Service
 class BookService(
@@ -34,10 +36,12 @@ class BookService(
     }
 
     fun delete(id: Int) {
-        if(!bookRepository.existsById(id)){
-            throw Exception()
-        }
+        val book = findById(id)
+        book.status = BookStatus.DELETADO
+        update(book)
+    }
 
-        bookRepository.deleteById(id)
+    fun findAllByStatus(): List<BookModel> {
+        return bookRepository.findAllByStatus(BookStatus.ATIVO)
     }
 }
