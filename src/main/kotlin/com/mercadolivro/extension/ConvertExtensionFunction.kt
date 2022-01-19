@@ -4,6 +4,8 @@ import com.mercadolivro.controllers.request.PostBookRequest
 import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutBookRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
+import com.mercadolivro.controllers.response.BookResponse
+import com.mercadolivro.controllers.response.CustomerResponse
 import com.mercadolivro.enuns.BookStatus
 import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.models.BookModel
@@ -36,5 +38,27 @@ fun PutBookRequest.toBookModel(oldBook: BookModel): BookModel {
         customer = oldBook.customer
     )
 }
+
+fun CustomerModel.toResponse(): CustomerResponse {
+    return CustomerResponse(
+        id = this.id,
+        name = this.name,
+        email = this.email,
+        status = this.status
+    )
+}
+
+fun BookModel.toResponse(): BookResponse {
+    return BookResponse(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        customer = this.customer,
+        status = this.status
+    )
+}
+
+
+
 
 

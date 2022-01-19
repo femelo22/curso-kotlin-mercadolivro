@@ -1,12 +1,11 @@
 package com.mercadolivro.controllers
 
-import com.fasterxml.jackson.databind.util.BeanUtil
 import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
+import com.mercadolivro.controllers.response.CustomerResponse
 import com.mercadolivro.extension.toCustomerModel
-import com.mercadolivro.models.CustomerModel
+import com.mercadolivro.extension.toResponse
 import com.mercadolivro.services.CustomerService
-import org.springframework.beans.BeanUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -17,19 +16,19 @@ class CustomerController(
 ) {
 
     @GetMapping
-    fun getAll(@RequestParam name: String?): List<CustomerModel> {
-        return customerService.getAll(name)
+    fun getAll(@RequestParam name: String?): List<CustomerResponse> {
+        return customerService.getAll(name).map { it.toResponse() }
+    }
+
+    @GetMapping("/{id}")
+    fun getCustomer(@PathVariable id: Int): CustomerResponse {
+        return customerService.getCustomerById(id).toResponse()
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody customer: PostCustomerRequest) {
         customerService.create(customer.toCustomerModel())
-    }
-
-    @GetMapping("/{id}")
-    fun getCustomer(@PathVariable id: Int): CustomerModel {
-        return customerService.getCustomerById(id)
     }
 
     @PutMapping("/{id}")
