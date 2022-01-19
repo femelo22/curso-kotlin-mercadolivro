@@ -44,7 +44,7 @@ class CustomerService (
         val customer = getCustomerById(id)
 
         bookService.deleteByCustomer(customer)
-        
+
         repo.deleteById(id)
     }
 
