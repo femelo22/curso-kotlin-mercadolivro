@@ -44,4 +44,12 @@ class BookService(
     fun findAllByStatus(): List<BookModel> {
         return bookRepository.findAllByStatus(BookStatus.ATIVO)
     }
+
+    fun deleteByCustomer(customer: CustomerModel) {
+        val books = bookRepository.findByCustomer(customer)
+        for(book in books){
+            book.status = BookStatus.DELETADO
+        }
+        bookRepository.saveAll(books)
+    }
 }
