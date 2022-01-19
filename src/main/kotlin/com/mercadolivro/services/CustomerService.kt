@@ -2,6 +2,7 @@ package com.mercadolivro.services
 
 import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
+import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +46,9 @@ class CustomerService (
 
         bookService.deleteByCustomer(customer)
 
-        repo.deleteById(id)
+        customer.status = CustomerStatus.INATIVO
+
+        repo.save(customer)
     }
 
 }
