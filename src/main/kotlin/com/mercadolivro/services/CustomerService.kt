@@ -3,6 +3,7 @@ package com.mercadolivro.services
 import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
 import com.mercadolivro.enuns.CustomerStatus
+import com.mercadolivro.enuns.Errors
 import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
@@ -30,7 +31,7 @@ class CustomerService (
     }
 
     fun getCustomerById(id: Int): CustomerModel {
-        return repo.findById(id).orElseThrow { NotFoundException("Customer [${id}] not exists", "ML-002") }
+        return repo.findById(id).orElseThrow { NotFoundException(Errors.ML002.message.format(id), Errors.ML002.code) }
     }
 
     fun update(customer: CustomerModel) {
