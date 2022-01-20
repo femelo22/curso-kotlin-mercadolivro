@@ -3,6 +3,7 @@ package com.mercadolivro.services
 import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
 import com.mercadolivro.enuns.CustomerStatus
+import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +30,7 @@ class CustomerService (
     }
 
     fun getCustomerById(id: Int): CustomerModel {
-        return repo.findById(id).orElseThrow()
+        return repo.findById(id).orElseThrow { NotFoundException("Customer [${id}] not exists", "ML-002") }
     }
 
     fun update(customer: CustomerModel) {
