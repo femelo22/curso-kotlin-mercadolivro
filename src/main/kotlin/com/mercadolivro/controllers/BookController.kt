@@ -20,10 +20,9 @@ class BookController(
     val bookService: BookService
 
 ){
-
     @GetMapping
-    fun findAll(@PageableDefault(page = 0, size = 10) pageble: Pageable): Page<BookResponse> {
-        return bookService.findAll(pageble).map { it.toResponse() }
+    fun findAll(): List<BookResponse> {
+        return bookService.findAll().map { it.toResponse() }
     }
 
     @GetMapping("/active")

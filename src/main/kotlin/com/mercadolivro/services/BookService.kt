@@ -12,15 +12,12 @@ import org.springframework.stereotype.Service
 class BookService(
     val bookRepository: BookRepository
 ){
-
     fun create(book: BookModel) {
-
         bookRepository.save(book)
-
     }
 
-    fun findAll(pageable: Pageable): Page<BookModel> {
-        return bookRepository.findAllPagebleBookModel(pageable)
+    fun findAll(): List<BookModel> {
+        return bookRepository.findAll()
     }
 
     fun findById(id: Int): BookModel {
@@ -28,11 +25,9 @@ class BookService(
     }
 
     fun update(book: BookModel) {
-
         if(!bookRepository.existsById(book.id!!)){
             throw Exception()
         }
-
         bookRepository.save(book)
     }
 
