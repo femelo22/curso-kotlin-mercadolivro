@@ -53,4 +53,8 @@ class CustomerService (
         repo.save(customer)
     }
 
+    fun emailAvailable(email: String): Boolean {
+        return !repo.existsByEmail(email)
+    }
+
 }

@@ -10,7 +10,6 @@ import com.mercadolivro.enuns.BookStatus
 import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.models.BookModel
 import com.mercadolivro.models.CustomerModel
-import java.awt.print.Book
 
 fun PostCustomerRequest.toCustomerModel(): CustomerModel {
     return CustomerModel(name = this.name, email = this.email, status = CustomerStatus.ATIVO)
