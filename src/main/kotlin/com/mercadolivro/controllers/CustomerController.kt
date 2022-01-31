@@ -17,8 +17,8 @@ class CustomerController(
 ) {
 
     @GetMapping
-    fun getAll(@RequestParam name: String?): List<CustomerResponse> {
-        return customerService.getAll(name).map { it.toResponse() }
+    fun getAll(): List<CustomerResponse> {
+        return customerService.getAll().map { it.toResponse() }
     }
 
     @GetMapping("/{id}")

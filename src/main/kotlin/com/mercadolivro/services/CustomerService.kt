@@ -18,11 +18,7 @@ class CustomerService (
     val bookService: BookService
 ){
 
-    fun getAll(name: String?): List<CustomerModel> {
-        name?.let {
-            return repo.findByName(it)
-        }
-
+    fun getAll(): List<CustomerModel> {
         return repo.findAll()
     }
 
