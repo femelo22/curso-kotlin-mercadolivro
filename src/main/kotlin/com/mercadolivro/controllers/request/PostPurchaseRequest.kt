@@ -7,7 +7,7 @@ class PostPurchaseRequest(
 
     @field:NotNull
     @field:Positive
-    val custumerId: Int,
+    val customerId: Int,
 
     @field:NotNull
     val booksId: Set<Int>
