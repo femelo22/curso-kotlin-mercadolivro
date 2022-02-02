@@ -1,6 +1,9 @@
 package com.mercadolivro.services
 
+import com.mercadolivro.enuns.BookStatus
+import com.mercadolivro.enuns.Errors
 import com.mercadolivro.events.PurchaseEvent
+import com.mercadolivro.exception.BadRequestException
 import com.mercadolivro.models.PurchaseModel
 import com.mercadolivro.repositories.PurchaseRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -13,6 +16,11 @@ class PurchaseService(
 ){
 
     fun create(purchaseModel: PurchaseModel){
+        purchaseModel.books.forEach {
+            if (it.status == BookStatus.DELETADO || it.status == BookStatus.VENDIDO){
+                throw BadRequestException(Errors.ML005.message.format(it.status), Errors.ML005.code);
+            }
+        }
         println("Disparando evento de compra")
         purchaseRepository.save(purchaseModel)
         applicationEventPublisher.publishEvent(PurchaseEvent(this, purchaseModel))
