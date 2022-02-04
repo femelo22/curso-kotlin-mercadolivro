@@ -4,6 +4,7 @@ import com.mercadolivro.controllers.request.PostCustomerRequest
 import com.mercadolivro.controllers.request.PutCustomerRequest
 import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.enuns.Errors
+import com.mercadolivro.enuns.Profile
 import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
@@ -23,7 +24,10 @@ class CustomerService (
     }
 
     fun create(customer: CustomerModel) {
-       repo.save(customer)
+        val customerCopy = customer.copy(
+            roles = setOf(Profile.CUSTOMER)
+        )
+       repo.save(customerCopy)
     }
 
     fun getCustomerById(id: Int): CustomerModel {
