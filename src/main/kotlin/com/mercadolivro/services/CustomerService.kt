@@ -10,13 +10,15 @@ import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
 
 @Service
 class CustomerService (
-    val repo: CustomerRepository,
-    val bookService: BookService
+    private val repo: CustomerRepository,
+    private val bookService: BookService,
+    private val bCrypt: BCryptPasswordEncoder
 ){
 
     fun getAll(): List<CustomerModel> {
@@ -25,7 +27,8 @@ class CustomerService (
 
     fun create(customer: CustomerModel) {
         val customerCopy = customer.copy(
-            roles = setOf(Profile.CUSTOMER)
+            roles = setOf(Profile.CUSTOMER),
+            password = bCrypt.encode(customer.password)
         )
        repo.save(customerCopy)
     }
