@@ -1,5 +1,7 @@
 package com.mercadolivro.config
 
+import com.mercadolivro.repositories.CustomerRepository
+import com.mercadolivro.security.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -11,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(): WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    private val customerRepository: CustomerRepository
+): WebSecurityConfigurerAdapter() {
 
     private val PUBLIC_POST_MATCHERS = arrayOf(
         "/customer"
@@ -26,6 +30,9 @@ class SecurityConfig(): WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.POST, *PUBLIC_POST_MATCHERS).permitAll() //o caracter "*" trasforma nossa lista para string, como se estivessemos passando varias strings
             .anyRequest().authenticated()
 
+        //Passa a req para nossa classe de filtro de requisições
+        http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository))
+        
         //deixar as requisições independentes, a req que chegar, não tem a ver com a ultima req que chegou
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
