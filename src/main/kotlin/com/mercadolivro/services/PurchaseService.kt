@@ -15,6 +15,7 @@ class PurchaseService(
     private val applicationEventPublisher: ApplicationEventPublisher
 ){
 
+
     fun create(purchaseModel: PurchaseModel){
         purchaseModel.books.forEach {
             if (it.status == BookStatus.DELETADO || it.status == BookStatus.VENDIDO){
@@ -29,6 +30,10 @@ class PurchaseService(
 
     fun update(purchaseModel: PurchaseModel) {
         purchaseRepository.save(purchaseModel)
+    }
+
+    fun getAllPurchaseByCustomer(customerId: Int): List<PurchaseModel> {
+        return purchaseRepository.findAllByCustomerId(customerId)
     }
 
 }
