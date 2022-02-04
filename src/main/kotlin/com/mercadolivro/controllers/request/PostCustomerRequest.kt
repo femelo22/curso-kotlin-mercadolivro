@@ -9,7 +9,10 @@ data class PostCustomerRequest (
     @field:NotEmpty(message = "Nome deve ser informado")
     var name: String,
 
-    @EmailAvailable
-    var email: String
+    @EmailAvailable(message = "Email em uso")
+    var email: String,
+
+    @field:NotEmpty(message = "Senha deve ser informada")
+    var password: String
 
 )
