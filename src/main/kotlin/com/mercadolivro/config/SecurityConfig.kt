@@ -5,6 +5,7 @@ import com.mercadolivro.security.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -21,6 +22,10 @@ class SecurityConfig(
         "/customer"
     )
 
+    override fun configure(auth: AuthenticationManagerBuilder?) {
+
+    }
+
     override fun configure(http: HttpSecurity) {
         //desabilitando cors
         http.cors().and().csrf().disable()
@@ -32,7 +37,7 @@ class SecurityConfig(
 
         //Passa a req para nossa classe de filtro de requisições
         http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository))
-        
+
         //deixar as requisições independentes, a req que chegar, não tem a ver com a ultima req que chegou
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
