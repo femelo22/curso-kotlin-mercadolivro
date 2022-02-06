@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class UserCustomDatails(val customerModel: CustomerModel): UserDetails {
 
-    val id = customerModel.id
+    val id: Int = customerModel.id!!
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> = customerModel.roles.map { SimpleGrantedAuthority(it.description) }.toMutableList()
 
