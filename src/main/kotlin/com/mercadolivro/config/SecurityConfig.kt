@@ -1,5 +1,6 @@
 package com.mercadolivro.config
 
+import com.mercadolivro.enuns.Profile
 import com.mercadolivro.repositories.CustomerRepository
 import com.mercadolivro.security.AuthenticationFilter
 import com.mercadolivro.security.AuthorizationFilter
@@ -27,6 +28,10 @@ class SecurityConfig(
         "/customer"
     )
 
+    private val ADMIN_MATCHERS = arrayOf(
+            "/admin/**"
+    )
+
     override fun configure(auth: AuthenticationManagerBuilder) {
             auth.userDetailsService(userDetails).passwordEncoder(bCryptPasswordEncoder())
     }
@@ -38,6 +43,7 @@ class SecurityConfig(
         //todas as req que chegarem, devem estar autenticadas
         http.authorizeRequests()
             .antMatchers(HttpMethod.POST, *PUBLIC_POST_MATCHERS).permitAll() //o caracter "*" trasforma nossa lista para string, como se estivessemos passando varias strings
+                .antMatchers(*ADMIN_MATCHERS).hasAuthority(Profile.ADMIN.description)
             .anyRequest().authenticated()
 
         //Passa a req para nossa classe de filtro de requisições
