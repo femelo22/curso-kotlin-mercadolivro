@@ -2,6 +2,7 @@ package com.mercadolivro.config
 
 import com.mercadolivro.repositories.CustomerRepository
 import com.mercadolivro.security.AuthenticationFilter
+import com.mercadolivro.security.AuthorizationFilter
 import com.mercadolivro.security.JwtUtil
 import com.mercadolivro.services.UserDetailCustomService
 import org.springframework.context.annotation.Bean
@@ -41,6 +42,9 @@ class SecurityConfig(
 
         //Passa a req para nossa classe de filtro de requisições
         http.addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
+
+        //Filtro para ver se tem autorização para fazer a requisição (vendo as roles)
+        http.addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
 
         //deixar as requisições independentes, a req que chegar, não tem a ver com a ultima req que chegou
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

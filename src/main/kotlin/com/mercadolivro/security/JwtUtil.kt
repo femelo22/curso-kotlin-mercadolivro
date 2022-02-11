@@ -40,4 +40,8 @@ class JwtUtil {
             throw AuthenticationException("Token inválido", "999")
         }
     }
+
+    fun getSubject(token: String): String {
+        return getClaims(token).subject
+    }
 }

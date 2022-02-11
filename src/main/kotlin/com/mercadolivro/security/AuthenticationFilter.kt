@@ -30,6 +30,7 @@ class AuthenticationFilter(
 
             //estamos validando nosso usuario e passando ele para autenticação
             val authToken = UsernamePasswordAuthenticationToken(id, loginRequest.password)
+
             return authenticationManager.authenticate(authToken)
         }catch (ex: Exception) {
             throw AuthenticationException("Falha ao autenticar", "999")
