@@ -2,6 +2,7 @@ package com.mercadolivro.security
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.mercadolivro.controllers.response.ErrorResponse
+import com.mercadolivro.enuns.Errors
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
@@ -19,7 +20,7 @@ class CustomAuthenticationEntryPoint: AuthenticationEntryPoint {
     ) {
         response.contentType = "application/json"
         response.status = HttpServletResponse.SC_UNAUTHORIZED
-        val errorResponse = ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "Unauthorized", "000", null)
+        val errorResponse = ErrorResponse(HttpStatus.UNAUTHORIZED.value(), Errors.ML000.message, Errors.ML000.code, null)
         response.outputStream.print(jacksonObjectMapper().writeValueAsString(errorResponse))
     }
 
