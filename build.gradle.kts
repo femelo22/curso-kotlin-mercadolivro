@@ -6,6 +6,7 @@ plugins {
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.4.30"
 	kotlin("plugin.jpa") version "1.4.30" //add construtor default
+	jacoco
 }
 
 group = "com.mercadolivro"

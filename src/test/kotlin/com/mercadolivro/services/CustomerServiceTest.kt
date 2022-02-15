@@ -50,10 +50,27 @@ class CustomerServiceTest {
 
         every { customerRepository.findAll() } returns fakeCustomers
 
-        val customers = customerRepository.findAll()
+        val customers = customerService.getAll()
 
         Assertions.assertEquals(fakeCustomers, customers)
 
         verify(exactly = 1) { customerRepository.findAll() } //garante que foi chamado uma unica vez
     }
+
+    @Test
+    fun `should create customer and encrypt password test`() {
+        val initialPassword = Math.random().toString()
+        val fakeCustomer = buildCustomer(password = initialPassword)
+        val fakePassword = UUID.randomUUID().toString()
+        val fakeCustomerEncrypted = fakeCustomer.copy(password = fakePassword)
+
+        every { customerRepository.save(fakeCustomerEncrypted) } returns fakeCustomer
+        every { bCrypt.encode(initialPassword) } returns fakePassword
+
+        customerService.create(fakeCustomer)
+
+        verify(exactly = 1) { customerRepository.save(fakeCustomerEncrypted) }
+        verify(exactly = 1) { bCrypt.encode(initialPassword) }
+    }
+
 }
