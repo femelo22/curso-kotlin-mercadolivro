@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:mysql://localhost:3306/mercadolivrotest?createDatabaseIfNotExist=true
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
+
+jwt:
+  secret: dbfeccbd-ddf6-4437-aad5-6f3b039c872f
+  expiration: 999999
