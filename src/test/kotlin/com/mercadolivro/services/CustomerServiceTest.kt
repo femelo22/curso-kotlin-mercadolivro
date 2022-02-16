@@ -1,6 +1,7 @@
 package com.mercadolivro.services
 
 import com.mercadolivro.enuns.CustomerStatus
+import com.mercadolivro.enuns.Errors
 import com.mercadolivro.enuns.Profile
 import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.models.CustomerModel
@@ -8,7 +9,10 @@ import com.mercadolivro.repositories.CustomerRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
+import io.mockk.just
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -16,6 +20,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
+import kotlin.math.exp
 
 @ExtendWith(MockKExtension::class)
 class CustomerServiceTest {
@@ -30,6 +35,7 @@ class CustomerServiceTest {
     private lateinit var bCrypt: BCryptPasswordEncoder
 
     @InjectMockKs
+    @SpyK //permite mockar métodos do customer service
     private lateinit var customerService: CustomerService
 
     fun buildCustomer(
@@ -134,6 +140,66 @@ class CustomerServiceTest {
 
         verify(exactly = 1) { customerRepository.existsById(id) }
         verify(exactly = 0) { customerRepository.save(any()) }
+    }
+
+    @Test
+    fun `should delete customer`() {
+        val id = Random().nextInt()
+        val fakeCustomer = buildCustomer(id = id)
+        val expectedCustomer = fakeCustomer.copy(status = CustomerStatus.INATIVO)
+
+        every { customerService.getCustomerById(id) } returns fakeCustomer
+        every { customerRepository.save(expectedCustomer) } returns expectedCustomer
+        every { bookService.deleteByCustomer(fakeCustomer) } just runs //para métodos void
+
+        customerService.delete(id)
+
+        verify(exactly = 1) { bookService.deleteByCustomer(fakeCustomer) }
+        verify(exactly = 1) { customerRepository.save(expectedCustomer) }
+    }
+
+    @Test
+    fun `should throw error when delete customer`() {
+        val id = Random().nextInt()
+
+        every { customerService.getCustomerById(id) } throws NotFoundException(Errors.ML002.message.format(id), Errors.ML002.code)
+
+        val error = assertThrows<NotFoundException> {
+            customerService.delete(id)
+        }
+
+        Assertions.assertEquals("Customer [$id] not exists", error.message)
+        Assertions.assertEquals("ML-002", error.errorCode)
+
+        verify(exactly = 1) { customerService.getCustomerById(id) }
+        verify(exactly = 0) { bookService.deleteByCustomer(any()) }
+        verify(exactly =0) { customerRepository.save(any()) }
+    }
+
+    @Test
+    fun `should return true when email is available`(){
+        val email = "${UUID.randomUUID()}@email.com"
+
+        every { customerRepository.existsByEmail(email) } returns false
+
+        val emailAvailable = customerService.emailAvailable(email)
+
+        Assertions.assertTrue(emailAvailable)
+
+        verify(exactly = 1) { customerRepository.existsByEmail(email) }
+    }
+
+    @Test
+    fun `should return false when email is unavailable`(){
+        val email = "${UUID.randomUUID()}@email.com"
+
+        every { customerRepository.existsByEmail(email) } returns true
+
+        val emailAvailable = customerService.emailAvailable(email)
+
+        Assertions.assertFalse(emailAvailable)
+
+        verify(exactly = 1) { customerRepository.existsByEmail(email) }
     }
 
 }
