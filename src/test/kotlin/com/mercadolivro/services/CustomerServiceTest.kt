@@ -2,6 +2,7 @@ package com.mercadolivro.services
 
 import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.enuns.Profile
+import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.models.CustomerModel
 import com.mercadolivro.repositories.CustomerRepository
 import io.mockk.every
@@ -11,6 +12,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
@@ -59,7 +61,7 @@ class CustomerServiceTest {
 
     @Test
     fun `should create customer and encrypt password test`() {
-        val initialPassword = Math.random().toString()
+        val initialPassword = Random().nextInt().toString()
         val fakeCustomer = buildCustomer(password = initialPassword)
         val fakePassword = UUID.randomUUID().toString()
         val fakeCustomerEncrypted = fakeCustomer.copy(password = fakePassword)
@@ -71,6 +73,34 @@ class CustomerServiceTest {
 
         verify(exactly = 1) { customerRepository.save(fakeCustomerEncrypted) }
         verify(exactly = 1) { bCrypt.encode(initialPassword) }
+    }
+
+    @Test
+    fun `should return costumer by id`() {
+        val id = Random().nextInt()
+        val fakeCustomer = buildCustomer(id = id)
+
+        every { customerRepository.findById(id) } returns Optional.of(fakeCustomer)
+
+        val customer = customerService.getCustomerById(id)
+
+        Assertions.assertEquals(fakeCustomer, customer)
+        verify(exactly = 1) { customerRepository.findById(id) }
+    }
+
+    @Test
+    fun `should throw error when find customer by id not found`() {
+        val id = Random().nextInt()
+
+        every { customerRepository.findById(id) } returns Optional.empty()
+
+        val error = assertThrows<NotFoundException> {
+            customerService.getCustomerById(id)
+        }
+
+        Assertions.assertEquals("Customer [$id] not exists", error.message)
+        Assertions.assertEquals("ML-002", error.errorCode)
+        verify(exactly = 1) { customerRepository.findById(id) }
     }
 
 }
