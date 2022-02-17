@@ -125,4 +125,25 @@ class BookServiceTest{
         verify(exactly = 1) { bookRepository.save(fakeBook) }
     }
 
+    @Test
+    fun `should throw error when update book`(){
+        val id = Random().nextInt()
+        val fakeBook = buildBook(id = id)
+
+        every { bookRepository.existsById(id) } returns false
+        every { bookRepository.save(fakeBook) } returns fakeBook
+
+        val error = assertThrows<NotFoundException> {
+            bookService.update(fakeBook)
+        }
+
+        Assertions.assertEquals("Book [$id] not exists", error.message)
+        Assertions.assertEquals("ML-001", error.errorCode)
+
+        verify(exactly = 1) { bookRepository.existsById(id) }
+        verify(exactly = 0) { bookRepository.save(fakeBook) }
+    }
+
+
+
 }

@@ -29,7 +29,7 @@ class BookService(
 
     fun update(book: BookModel) {
         if(!bookRepository.existsById(book.id!!)){
-            throw Exception()
+            throw NotFoundException(Errors.ML001.message.format(book.id), Errors.ML001.code)
         }
         bookRepository.save(book)
     }
