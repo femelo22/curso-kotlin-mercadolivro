@@ -111,4 +111,18 @@ class BookServiceTest{
         verify(exactly = 1) { bookRepository.save(fakeBook) }
     }
 
+    @Test
+    fun `should update book`(){
+        val id = Random().nextInt()
+        val fakeBook = buildBook(id = id)
+
+        every { bookRepository.existsById(id) } returns true
+        every { bookRepository.save(fakeBook) } returns fakeBook
+
+        bookService.update(fakeBook)
+
+        verify(exactly = 1) { bookRepository.existsById(id) }
+        verify(exactly = 1) { bookRepository.save(fakeBook) }
+    }
+
 }
