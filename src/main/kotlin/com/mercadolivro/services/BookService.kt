@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service
 class BookService(
     private val bookRepository: BookRepository
 ){
-    fun create(book: BookModel) {
-        bookRepository.save(book)
-    }
 
     fun findAll(): List<BookModel> {
         return bookRepository.findAll()
@@ -24,6 +21,10 @@ class BookService(
 
     fun findById(id: Int): BookModel {
         return bookRepository.findById(id).orElseThrow{NotFoundException(Errors.ML001.message.format(id), Errors.ML001.code)}
+    }
+
+    fun create(book: BookModel) {
+        bookRepository.save(book)
     }
 
     fun update(book: BookModel) {
