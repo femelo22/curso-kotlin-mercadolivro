@@ -100,4 +100,15 @@ class BookServiceTest{
         verify(exactly = 1){ bookRepository.findById(id) }
     }
 
+    @Test
+    fun `should create new book`() {
+        val fakeBook = buildBook()
+
+        every { bookRepository.save(fakeBook) } returns fakeBook
+
+        bookService.create(fakeBook)
+
+        verify(exactly = 1) { bookRepository.save(fakeBook) }
+    }
+
 }
