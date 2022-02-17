@@ -112,7 +112,7 @@ class BookServiceTest{
     }
 
     @Test
-    fun `should update book`(){
+    fun `should update book`() {
         val id = Random().nextInt()
         val fakeBook = buildBook(id = id)
 
@@ -126,7 +126,7 @@ class BookServiceTest{
     }
 
     @Test
-    fun `should throw error when update book`(){
+    fun `should throw error when update book`() {
         val id = Random().nextInt()
         val fakeBook = buildBook(id = id)
 
@@ -144,8 +144,35 @@ class BookServiceTest{
         verify(exactly = 0) { bookRepository.save(fakeBook) }
     }
 
+//    @Test
+//    fun `should delete book by id`() {
+//        val id = Random().nextInt()
+//        val fakeBook = buildBook(id = id)
+//
+//        every { bookRepository.findById(id) } returns Optional.of(fakeBook)
+//        every { bookRepository.save(fakeBook) } returns fakeBook
+//
+//        bookService.delete(id)
+//
+//        verify(exactly = 1) { bookRepository.findById(id) }
+//        verify(exactly = 1) { bookRepository.save(fakeBook) }
+//    }
 
+//    @Test
+//    fun `should delete book by customer`() {
+//
+//    }
 
+    @Test
+    fun `should find all books by status active`() {
+        val fakeBooks = listOf(buildBook(), buildBook())
 
+        every { bookRepository.findAllByStatus(BookStatus.ATIVO) } returns fakeBooks
+
+        val books = bookService.findAllByStatus()
+
+        verify(exactly = 1) { bookRepository.findAllByStatus(BookStatus.ATIVO) }
+        Assertions.assertEquals(fakeBooks, books)
+    }
 
 }
