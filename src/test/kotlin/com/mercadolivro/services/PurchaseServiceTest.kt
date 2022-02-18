@@ -1,5 +1,6 @@
 package com.mercadolivro.services
 
+import com.mercadolivro.models.PurchaseModel
 import com.mercadolivro.repositories.PurchaseRepository
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -20,5 +21,7 @@ class PurchaseServiceTest{
     @InjectMockKs
     @SpyK
     private lateinit var purchaseService: PurchaseService
+
+
 
 }

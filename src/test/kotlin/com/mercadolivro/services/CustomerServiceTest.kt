@@ -2,9 +2,8 @@ package com.mercadolivro.services
 
 import com.mercadolivro.enuns.CustomerStatus
 import com.mercadolivro.enuns.Errors
-import com.mercadolivro.enuns.Profile
 import com.mercadolivro.exception.NotFoundException
-import com.mercadolivro.models.CustomerModel
+import com.mercadolivro.helper.buildCustomer
 import com.mercadolivro.repositories.CustomerRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,7 +19,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
-import kotlin.math.exp
 
 @ExtendWith(MockKExtension::class)
 class CustomerServiceTest {
@@ -37,20 +35,6 @@ class CustomerServiceTest {
     @InjectMockKs
     @SpyK //permite mockar métodos do customer service
     private lateinit var customerService: CustomerService
-
-    fun buildCustomer(
-        id: Int? = null,
-        name: String = "customer name",
-        email: String = "${UUID.randomUUID()}@gmail.com",
-        password: String = "password"
-    ) = CustomerModel(
-        id = id,
-        name = name,
-        email = email,
-        status = CustomerStatus.ATIVO,
-        password = password,
-        roles = setOf(Profile.CUSTOMER)
-    )
 
     @Test
     fun `should return all customers`() {
