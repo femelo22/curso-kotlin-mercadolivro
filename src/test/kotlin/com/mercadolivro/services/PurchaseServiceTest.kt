@@ -2,7 +2,6 @@ package com.mercadolivro.services
 
 import com.mercadolivro.events.PurchaseEvent
 import com.mercadolivro.helper.buildPurchase
-import com.mercadolivro.models.PurchaseModel
 import com.mercadolivro.repositories.PurchaseRepository
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -45,6 +44,17 @@ class PurchaseServiceTest{
         verify { applicationEventPublisher.publishEvent(capture(purchaseEventSlot)) }
 
         Assertions.assertEquals(purchaseFake, purchaseEventSlot.captured.purchaseModel)
+    }
+
+    @Test
+    fun `should update purchase`() {
+        val purchaseFake = buildPurchase()
+
+        every { purchaseRepository.save(purchaseFake) } returns purchaseFake
+
+        purchaseService.update(purchaseFake)
+
+        verify(exactly = 1) { purchaseRepository.save(purchaseFake) }
     }
 
 }
