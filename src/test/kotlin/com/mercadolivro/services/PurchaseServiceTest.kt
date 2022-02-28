@@ -9,6 +9,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.context.ApplicationEventPublisher
@@ -43,7 +44,7 @@ class PurchaseServiceTest{
 
         verify { applicationEventPublisher.publishEvent(capture(purchaseEventSlot)) }
 
-        Assertions.assertEquals(purchaseFake, purchaseEventSlot.captured.purchaseModel)
+        assertEquals(purchaseFake, purchaseEventSlot.captured.purchaseModel)
     }
 
     @Test

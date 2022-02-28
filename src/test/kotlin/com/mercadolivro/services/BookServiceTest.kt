@@ -14,6 +14,7 @@ import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +22,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
-class BookServiceTest{
+class BookServiceTest {
 
     @MockK
     private lateinit var bookRepository: BookRepository
@@ -65,7 +66,7 @@ class BookServiceTest{
 
         val books = bookService.findAll()
 
-        Assertions.assertEquals(fakeBooks, books)
+        assertEquals(fakeBooks, books)
 
         verify(exactly = 1) { bookRepository.findAll() }
     }
@@ -79,7 +80,7 @@ class BookServiceTest{
 
         val book = bookService.findById(id)
 
-        Assertions.assertEquals(fakeBook, book)
+        assertEquals(fakeBook, book)
         verify(exactly = 1) { bookRepository.findById(id) }
 
     }
@@ -94,8 +95,8 @@ class BookServiceTest{
             bookService.findById(id)
         }
 
-        Assertions.assertEquals("Book [$id] not exists", error.message)
-        Assertions.assertEquals("ML-001", error.errorCode)
+        assertEquals("Book [$id] not exists", error.message)
+        assertEquals("ML-001", error.errorCode)
 
         verify(exactly = 1){ bookRepository.findById(id) }
     }
@@ -137,8 +138,8 @@ class BookServiceTest{
             bookService.update(fakeBook)
         }
 
-        Assertions.assertEquals("Book [$id] not exists", error.message)
-        Assertions.assertEquals("ML-001", error.errorCode)
+        assertEquals("Book [$id] not exists", error.message)
+        assertEquals("ML-001", error.errorCode)
 
         verify(exactly = 1) { bookRepository.existsById(id) }
         verify(exactly = 0) { bookRepository.save(fakeBook) }
@@ -172,7 +173,7 @@ class BookServiceTest{
         val books = bookService.findAllByStatus()
 
         verify(exactly = 1) { bookRepository.findAllByStatus(BookStatus.ATIVO) }
-        Assertions.assertEquals(fakeBooks, books)
+        assertEquals(fakeBooks, books)
     }
 
 }

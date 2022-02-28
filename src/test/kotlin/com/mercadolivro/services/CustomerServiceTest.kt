@@ -14,6 +14,7 @@ import io.mockk.just
 import io.mockk.runs
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -44,7 +45,7 @@ class CustomerServiceTest {
 
         val customers = customerService.getAll()
 
-        Assertions.assertEquals(fakeCustomers, customers)
+        assertEquals(fakeCustomers, customers)
 
         verify(exactly = 1) { customerRepository.findAll() } //garante que foi chamado uma unica vez
     }
@@ -74,7 +75,7 @@ class CustomerServiceTest {
 
         val customer = customerService.getCustomerById(id)
 
-        Assertions.assertEquals(fakeCustomer, customer)
+        assertEquals(fakeCustomer, customer)
         verify(exactly = 1) { customerRepository.findById(id) }
     }
 
@@ -88,8 +89,8 @@ class CustomerServiceTest {
             customerService.getCustomerById(id)
         }
 
-        Assertions.assertEquals("Customer [$id] not exists", error.message)
-        Assertions.assertEquals("ML-002", error.errorCode)
+        assertEquals("Customer [$id] not exists", error.message)
+        assertEquals("ML-002", error.errorCode)
         verify(exactly = 1) { customerRepository.findById(id) }
     }
 
@@ -119,8 +120,8 @@ class CustomerServiceTest {
             customerService.update(fakeCustomer)
         }
 
-        Assertions.assertEquals("Customer [$id] not exists", error.message)
-        Assertions.assertEquals("ML-002", error.errorCode)
+        assertEquals("Customer [$id] not exists", error.message)
+        assertEquals("ML-002", error.errorCode)
 
         verify(exactly = 1) { customerRepository.existsById(id) }
         verify(exactly = 0) { customerRepository.save(any()) }
@@ -152,8 +153,8 @@ class CustomerServiceTest {
             customerService.delete(id)
         }
 
-        Assertions.assertEquals("Customer [$id] not exists", error.message)
-        Assertions.assertEquals("ML-002", error.errorCode)
+        assertEquals("Customer [$id] not exists", error.message)
+        assertEquals("ML-002", error.errorCode)
 
         verify(exactly = 1) { customerService.getCustomerById(id) }
         verify(exactly = 0) { bookService.deleteByCustomer(any()) }
